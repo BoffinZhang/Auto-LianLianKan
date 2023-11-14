@@ -1,0 +1,8 @@
+keyboard==0.13.5
+numpy==1.23.0
+opencv_python==4.7.0.72
+Pillow==10.1.0
+pywin32==304
+skimage==0.0
+tqdm==4.65.0
+win32gui==221.6
