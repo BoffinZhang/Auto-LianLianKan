@@ -41,6 +41,13 @@ def setWindowForeground():
     shell.SendKeys('%')
     win32gui.SetForegroundWindow(window)
 
+def setFaterWindowForeground():
+    window = win32gui.FindWindow(None, FATHER_WINDOW_TITLE)
+    pythoncom.CoInitialize()
+    shell = win32com.client.Dispatch("WScript.Shell")
+    shell.SendKeys('%')
+    win32gui.SetForegroundWindow(window)
+
 # 获取完整的屏幕截图
 def getScreenImage():
     # print('图像识别中')

@@ -29,15 +29,16 @@ def recognize_window():
     maze = get_maze(image_list) # 转换为二维数组标识的方块
     return gamepos, maze
 
-def brute_solve():
+def brute_solve(gamepos, maze):
     # 对所有剩余方块进行暴力点击
     # 适用于某些识别不出来的特殊情况
-    gamepos, maze = recognize_window()
-    setWindowForeground()
+    # gamepos, maze = recognize_window()
+    # setWindowForeground()
     for i in range(NUM_H):
         for j in range(NUM_W):
             for m in range(i + 1, NUM_H):
                 for n in range(j + 1, NUM_W):
+
                     if maze[i, j] > 0 and maze[m, n] > 0:
                         st = (i, j)
                         ed = (m, n)
@@ -47,6 +48,8 @@ def brute_solve():
                                 gamepos[1] + GAME_AREA_Y + ed[0] * SQUARE_H + 10)
                         mouse_click(st_pos, 0.01)
                         mouse_click(ed_pos, 0.01)
+                        if not is_game_start():
+                            return
 
 def solve_single():
     gamepos, maze = recognize_window()
@@ -96,10 +99,12 @@ def solve(time_interval):
             if get_square_left(maze) < 10:
                 # 首先尝试暴力
                 print('暴力求解中')
-                brute_solve()
+                brute_solve(gamepos, maze)
                 gamepos, maze = getGameWindowPosition()
+                if not is_game_start():
+                    break
 
-            if get_square_left() > 0 and num_reshape <= 2:
+            if get_square_left(maze) > 0 and num_reshape <= 2:
                 print('无解，点击重排')
                 # 点击重排
                 press_reshape(gamepos)
@@ -162,6 +167,7 @@ def auto_mode():
             if not getGameWindowPosition():
                 print('游戏窗口关闭，重新进入')
                 fgamepos = getFatherWindowPosition()
+                setFaterWindowForeground()
                 press_fstart(fgamepos)
                 time.sleep(2)
                 press_iknow()
@@ -184,7 +190,7 @@ def auto_mode():
             press_iknow()
             if not getGameWindowPosition():
                 continue
-            solve(time_interval=0.5)
+            solve(time_interval=CLICK_INTERVAL_AUTO)
             time.sleep(5)
 
         except Exception as e:
@@ -195,6 +201,7 @@ def auto_mode():
             # 游戏窗口未打开
             if not getGameWindowPosition():
                 fgamepos = getFatherWindowPosition()
+                setFaterWindowForeground()
                 press_fstart(fgamepos)
 
 
